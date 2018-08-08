@@ -1,0 +1,61 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>iview example</title>
+    <link rel="stylesheet" type="text/css" href="http://unpkg.com/iview/dist/styles/iview.css">
+    <script type="text/javascript" src="http://vuejs.org/js/vue.min.js"></script>
+    <script type="text/javascript" src="http://unpkg.com/iview/dist/iview.min.js"></script>
+</head>
+<body>
+<div id="app">
+    <div>
+        <Date-picker type="date" :options="startTimeOptions" @on-change="startTimeChange" placeholder="开始时间"
+            v-model="starttime" ></Date-picker>
+        <Date-picker type="date" :options="endTimeOptions" @on-change="endTimeChange" placeholder="结束时间"
+            v-model="endtime" ></Date-picker>
+    </div>
+</div>
+<script>
+    new Vue({
+        el: '#app',
+        data() {
+            return {
+                startTimeOptions: {
+                    disabledDate (date) {
+                      return date && date.valueOf() > Date.now()
+                    }
+                }, //开始日期设置
+                endTimeOptions: {
+                    disabledDate (date) {
+                      return date && date.valueOf() > Date.now()
+                    }
+                }, //结束日期设置
+                starttime: '', //开始日期model
+                endtime: '',//结束日期model
+              }
+        },
+        methods: {
+            startTimeChange: function(e) { //设置开始时间
+                this.starttime = e;
+                this.endTimeOptions = {
+                  disabledDate: date => {
+                    let startTime = this.starttime ? new Date(this.starttime).valueOf() - 1 * 24 * 60 * 60 * 1000: '';
+                    console.log(startTime)
+                    return date && (date.valueOf() < startTime || date.valueOf() > Date.now()) ;
+                  }
+                }
+              },
+              endTimeChange: function(e) { //设置结束时间
+                this.endtime = e;
+                let endTime = this.endtime ? new Date(this.endtime).valueOf()  : '';
+                this.startTimeOptions = {
+                  disabledDate(date) {
+                    return date && date.valueOf() > endTime ;
+                  }
+                }
+              }
+        }
+    })
+  </script>
+</body>
+</html>
