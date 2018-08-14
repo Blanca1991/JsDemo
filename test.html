@@ -1,0 +1,166 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>iview example</title>
+    <link rel="stylesheet" type="text/css" href="http://unpkg.com/iview/dist/styles/iview.css">
+    <script type="text/javascript" src="http://vuejs.org/js/vue.min.js"></script>
+    <script type="text/javascript" src="http://unpkg.com/iview/dist/iview.min.js"></script>
+    <script type="text/javascript" src="./axios.min.js"></script>
+</head>
+<body>
+  <div id="TestVue">
+      <i-table :columns="columns" :data="dataList"></i-table>
+  </div>
+<script>
+// 综合管理信息  list 查询页面js
+var vm = new Vue({
+	el:'#TestVue',
+	data () {
+		return {
+			creditNo: '', // 统一社会信用代码
+			shopName: '', // 店铺名
+			checkResult: '', // 是否出现异常
+			starttime: '', //开始日期model
+      endtime: '',//结束日期model
+			startTimeOptions: {
+        disabledDate (date) {
+          return date && date.valueOf() > Date.now()
+        }
+      }, //开始日期设置
+      endTimeOptions: {
+        disabledDate (date) {
+          return date && date.valueOf() > Date.now()
+        }
+      }, //结束日期设置
+			// table的头
+			columns: [
+					{
+							type: 'index',
+							title: '序号',
+							width: 60,
+							align: 'center'
+					},
+					{
+							title: '检查日期',
+							key: 'checkTime'
+					},
+					{
+							title: '店铺名',
+							key: 'shopName'
+					},
+					{
+							title: '统一社会信用代码/注册码',
+							key: 'creditNo'
+					},
+					{
+							title: '检查项目',
+							key: 'checkInfoDetailList',
+							render: (h, params) => {
+								let me = this
+                console.log(me.dataList, params.index, me.dataList[params.index].checkInfoDetailList);
+                // me.dataList[params.index].checkInfoDetailList.checkItem
+                let items = '';
+                me.dataList[params.index].checkInfoDetailList.map(function(value,index){
+                  items = items + value.checkItem + ','
+                  console.log(items ,value.checkItem)
+                　 return items
+                })
+								return h('span', items);
+							}
+					},
+					{
+							title: '是否出现异常',
+							key: 'checkResult'
+					},
+					{
+							title: '操作',
+							key: 'action',
+							width: 200,
+							render: (h, params) => {
+								return h('div', [
+										h('Button', {
+												props: {
+														type: 'primary',
+														size: 'small'
+												},
+												style: {
+														marginRight: '5px'
+												},
+												on: {
+														click: () => {
+															console.log('查看全部', params.index);
+															window.location.href = './leaseInfoIn.html';
+												      console.log(params);
+														}
+												}
+										}, '查看全部'),
+										h('Button', {
+												props: {
+														type: 'warning',
+														size: 'small'
+												},
+												style: {
+														marginRight: '5px'
+												},
+												on: {
+														click: () => {
+															console.log('编辑', params);
+														}
+												}
+										}, '编辑'),
+										h('Button', {
+												props: {
+														type: 'error',
+														size: 'small'
+												},
+												on: {
+														click: () => {
+																console.log('删除', params.index);
+														}
+												}
+										}, '删除')
+								]);
+							}
+					}
+			],
+			// table body
+			dataList: [
+					{
+						checkTime: '2015-10-13',
+						creditNo: '12515235165',
+						shopName: '老酸奶',
+						checkInfoDetailList: [
+							{checkItem: '项目1'},
+							{checkItem: '项目2'},
+							{checkItem: '项目3'},
+						],
+						checkResult: '上海徐家汇'
+					}
+			],
+		}
+	},
+	methods: {
+
+	},
+	mounted () {
+    axios.get('/user', {
+      params: {
+        ID: 12345
+      }
+    })
+    .then(function (response) {
+      console.log(response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+	},
+	created () {
+
+	}
+});
+
+
+</script>
+</body>
+</html>
