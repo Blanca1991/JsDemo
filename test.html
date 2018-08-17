@@ -140,7 +140,28 @@ var vm = new Vue({
 		}
 	},
 	methods: {
-
+    pushOpenMent (data) {
+			// 这个一个数组去重的方法  添加新的元素 如果重复就不添加
+			console.log(data);
+      // 先添加
+			this.openMenuList.push(data)
+			let arr  = this.openMenuList
+			let result = {}
+			for (let i = 0;i< arr.length; i++) {
+        // 这一步利用对象的key不能重复 去重
+				result[arr[i].name] = arr[i]
+			}
+			console.log(result);
+			let finalResult = [];
+			for (var item in result) {
+        // 再把去重的对象的每个元素 添加到数组里
+				finalResult.push(result[item])
+			}
+			console.log(finalResult);
+      // 将最后的数组赋值给所需要的数组
+			this.openMenuList = finalResult
+			console.log(this.openMenuList);
+		}
 	},
 	mounted () {
     axios.get('/user', {
